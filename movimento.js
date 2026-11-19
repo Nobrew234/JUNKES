@@ -1,5 +1,23 @@
 ﻿const motion = matchMedia("(prefers-reduced-motion: no-preference)");
 
+const handheldGuide = matchMedia("(max-width: 740px), (pointer: coarse) and (max-height: 600px)");
+
+function onCardSwipe(card, navigate) {
+  let start;
+  card.addEventListener("pointerdown", event => {
+    start = event.isPrimary && event.pointerType !== "mouse" && !event.target.closest("a,button")
+      ? { id: event.pointerId, x: event.clientX, y: event.clientY } : null;
+  });
+  card.addEventListener("pointercancel", () => { start = null; });
+  card.addEventListener("pointerup", event => {
+    if (start?.id !== event.pointerId) return;
+    const dx = event.clientX - start.x;
+    const dy = event.clientY - start.y;
+    start = null;
+    if (Math.abs(dx) >= 40 && Math.abs(dx) > Math.abs(dy) * 1.4) navigate(dx < 0 ? 1 : -1);
+  });
+}
+
 // Keep a visual copy of the old card above the new, interactive one.
 function cardStack(card) {
   let departing;
@@ -80,6 +98,7 @@ function initCover(gallery) {
     schedule();
   }
   controls.hidden = false;
+  onCardSwipe(card, direction => show(current + direction, direction));
   controls.querySelector(".cover-prev").onclick = () => show(current - 1, -1);
   controls.querySelector(".cover-next").onclick = () => show(current + 1, 1);
   play.onclick = () => { paused = !paused; schedule(); };
@@ -177,7 +196,7 @@ function initGuide(section, syncCover) {
 
   function paint() {
     scheduled = false;
-    if (!section.classList.contains("live")) return;
+    if (handheldGuide.matches || !section.classList.contains("live")) return;
     const rect = section.getBoundingClientRect();
     if (rect.bottom < 0 || rect.top > innerHeight) return;
     const height = stage.offsetHeight;
@@ -188,6 +207,10 @@ function initGuide(section, syncCover) {
 
   function go(index) {
     if (index < 0 || index >= services.length) return;
+    if (handheldGuide.matches) {
+      show(index);
+      return;
+    }
     const top = scrollY + section.getBoundingClientRect().top + index * step;
     window.scrollTo({ top: Math.ceil(top), behavior: "instant" });
     paint();
@@ -195,10 +218,20 @@ function initGuide(section, syncCover) {
 
   function followHash() {
     const index = items.findIndex(item => "#" + item.id === location.hash);
-    if (index >= 0 && section.classList.contains("live")) go(index);
+    if (index >= 0 && section.classList.contains("live")) {
+      go(index);
+      if (handheldGuide.matches) section.scrollIntoView({ behavior: "instant" });
+    }
   }
 
   function resize() {
+    if (handheldGuide.matches) {
+      section.classList.add("live", "handheld");
+      section.style.height = "";
+      if (current < 0) show(0);
+      return;
+    }
+    section.classList.remove("handheld");
     const formerIndex = current;
     const top = section.getBoundingClientRect().top;
     const pinned = section.classList.contains("live") && top <= 1 && -top < section.offsetHeight - stage.offsetHeight;
@@ -217,6 +250,7 @@ function initGuide(section, syncCover) {
   }
 
   select.addEventListener("change", () => go(Number(select.value)));
+  onCardSwipe(card, direction => go(current + direction));
   previous.addEventListener("click", () => go(current - 1));
   next.addEventListener("click", () => go(current + 1));
   window.addEventListener("scroll", () => {

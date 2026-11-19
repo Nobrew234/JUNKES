@@ -192,6 +192,22 @@ nav a:hover,.text:hover,summary:hover {color:var(--accent)}
 footer .text:hover {color:#edc8ae}
 .sequence button:not([aria-disabled="true"]):hover {background:var(--paper);color:var(--ink)}
 .guide-bar :focus-visible,.guide-foot :focus-visible {outline-color:#ffead5}
+.cover,.handheld .service-card {touch-action:pan-y pinch-zoom}
+.handheld .stage {
+  position:relative;height:auto;padding-block:clamp(24px,5vw,44px);
+  grid-template-rows:auto auto auto;gap:16px;
+}
+.handheld .guide-bar,.handheld .guide-foot {padding:0;flex-wrap:wrap}
+.handheld .guide-bar select,.handheld .sequence button,.cover-controls button {min-height:44px}
+.handheld .sequence button,.cover-controls button {min-width:44px}
+@media (max-width:650px) {
+  .handheld .service-card {grid-template-columns:minmax(0,1fr);grid-template-rows:clamp(165px,36svh,350px) auto}
+  .handheld .service-copy {min-width:0;min-height:14rem}
+}
+@media (pointer:coarse) and (prefers-reduced-motion:no-preference) {
+  .button:active,.sequence button:active,.cover-controls button:active {transform:scale(.96)}
+  .photos a:active img {transform:scale(.98)}
+}
 @media(max-width:740px) {
   .wrap {width:89%}
   .bar {flex-wrap:wrap;gap:0;padding-bottom:10px}
