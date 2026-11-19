@@ -1,0 +1,40 @@
+{
+  "version": 1,
+  "project": {
+    "name": "junkes-site",
+    "productType": null,
+    "stack": []
+  },
+  "sources": {
+    "tokens": [],
+    "components": [],
+    "assets": [],
+    "instructions": []
+  },
+  "design": {
+    "colorMode": "unknown",
+    "colors": {},
+    "typography": {},
+    "spacing": {},
+    "radius": {},
+    "shadows": {},
+    "motion": {},
+    "density": "unknown"
+  },
+  "components": {
+    "installed": [],
+    "preferredPrimitives": [],
+    "patterns": []
+  },
+  "constraints": {
+    "must": [],
+    "avoid": []
+  },
+  "decisions": [
+    "Mostrar um serviço por vez em um card grande e arredondado, centralizado sobre a fotografia desfocada durante a rolagem.",
+    "Abrir a página com a marca em uma folha que sobe. Na capa e no guia, inclinar e descartar o card da frente para revelar o próximo.",
+    "Alternar as quatro fotos da capa a cada 1,25 segundo. Ao passar o mouse, brincar com as letras dos títulos e links e dar movimento às fotografias. Revelar os textos durante a rolagem."
+  ],
+  "evidence": [],
+  "generatedAt": "2026-11-18T15:20:06.059Z"
+}
