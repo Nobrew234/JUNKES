@@ -225,3 +225,4 @@ footer .text:hover {color:#edc8ae}
   .list-photo {height:auto;aspect-ratio:4/5}
   .list article > div {padding:20px}
 }
+footer .text + .text {margin-left:1.4em}
